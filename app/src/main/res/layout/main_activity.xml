@@ -15,5 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:clickable="true"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        tools:ignore="SpeakableTextPresentCheck" />
 </FrameLayout>
