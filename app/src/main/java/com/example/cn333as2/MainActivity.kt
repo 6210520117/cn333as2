@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
+import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.example.cn333as2.databinding.MainActivityBinding
 import com.example.cn333as2.models.NameList
+import com.example.cn333as2.ui.detail.ListDetailFragment
 import com.example.cn333as2.ui.main.MainFragment
 import com.example.cn333as2.ui.main.MainViewModel
 import com.example.cn333as2.ui.main.MainViewModelFactory
@@ -28,9 +31,17 @@ class MainActivity : AppCompatActivity(), MainFragment.MainFragmentInteractionLi
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.add_button, MainFragment.newInstance(this))
-                .commitNow()
+            val mainFragment = MainFragment.newInstance(this)
+            val fragmentContainerViewId: Int = if (binding.mainFragment == null) {
+                R.id.container}
+            else {
+                R.id.main_fragment
+            }
+
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add(fragmentContainerViewId, mainFragment)
+            }
         }
 
         binding.addButton.setOnClickListener {
@@ -55,9 +66,18 @@ class MainActivity : AppCompatActivity(), MainFragment.MainFragmentInteractionLi
     }
 
     private fun showListDetail (list:NameList) {
+        if (binding.mainFragment == null) {
         val listDetailIntent = Intent(this, ListDetailActivity::class.java)
         listDetailIntent.putExtra(INTENT_LIST_KEY, list)
         startActivity(listDetailIntent)
+        }
+        else {
+            val bundle = bundleOf(INTENT_LIST_KEY to list)
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace(R.id.list_detail_fragment, ListDetailFragment::class.java, bundle, null)
+            }
+        }
     }
 
     companion object {

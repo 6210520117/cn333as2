@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.cn333as2.MainActivity
 import com.example.cn333as2.R
 import com.example.cn333as2.databinding.ListDetailFragmentBinding
+import org.w3c.dom.NameList
 
 class ListDetailFragment : Fragment() {
     lateinit var binding: ListDetailFragmentBinding
@@ -31,5 +33,6 @@ class ListDetailFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(ListDetailViewModel::class.java)
         // TODO: Use the ViewModel
     }
+
 
 }
