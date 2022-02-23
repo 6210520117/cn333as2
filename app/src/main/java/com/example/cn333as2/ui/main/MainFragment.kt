@@ -12,18 +12,15 @@ import com.example.cn333as2.R
 import com.example.cn333as2.databinding.MainFragmentBinding
 import com.example.cn333as2.models.NameList
 
-class MainFragment() : Fragment(), ListSelectionRecyclerViewAdapter.ListSelectionRecyclerViewClickListener{
+class MainFragment(val clickListener: MainFragmentInteractionListener) : Fragment(), ListSelectionRecyclerViewAdapter.ListSelectionRecyclerViewClickListener{
     private lateinit var binding:MainFragmentBinding
-    var clickListener: MainFragmentInteractionListener? = null
-    var holdClickListener: MainFragmentInteractionListener? = null
 
     interface MainFragmentInteractionListener {
         fun listItemTapped(list: NameList)
-        fun listItemHold(list: NameList)
     }
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance(clickListener: MainFragmentInteractionListener) = MainFragment(clickListener)
     }
 
     private lateinit var viewModel: MainViewModel
@@ -43,23 +40,15 @@ class MainFragment() : Fragment(), ListSelectionRecyclerViewAdapter.ListSelectio
             MainViewModelFactory(PreferenceManager.getDefaultSharedPreferences(requireActivity())))
             .get(MainViewModel::class.java)
 
-        val recyclerViewAdapter = ListSelectionRecyclerViewAdapter(viewModel.lists, this,this)
+        val recyclerViewAdapter = ListSelectionRecyclerViewAdapter(viewModel.lists, this)
         binding.listName.adapter = recyclerViewAdapter
         viewModel.onListAdded = {
             recyclerViewAdapter.listsUpdated()
         }
-        viewModel.onListRemoved ={
-            recyclerViewAdapter.listsRemove(viewModel.whereRemoved)
-
-        }
     }
 
     override fun listItemClicked(list: NameList) {
-        clickListener?.listItemTapped(list)
-    }
-
-    override fun listItemHold(list: NameList) {
-        holdClickListener?.listItemHold(list)
+        clickListener.listItemTapped(list)
     }
 
 }

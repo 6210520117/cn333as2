@@ -3,16 +3,16 @@ package com.example.cn333as2.models
 import android.os.Parcel
 import android.os.Parcelable
 
-class NameList(val name: String, val content: String) : Parcelable{
+class NameList(val name: String, val tasks: ArrayList<String> = ArrayList()) : Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
-        parcel.readString()!!
+        parcel.createStringArrayList()!!
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
-        parcel.writeString(content)
+        parcel.writeStringList(tasks)
     }
 
     override fun describeContents(): Int {
