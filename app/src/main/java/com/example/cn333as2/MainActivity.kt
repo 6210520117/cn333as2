@@ -1,11 +1,13 @@
 package com.example.cn333as2
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
@@ -34,8 +36,9 @@ class MainActivity : AppCompatActivity(), MainFragment.MainFragmentInteractionLi
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            val mainFragment = MainFragment.newInstance(this)
-
+            val mainFragment = MainFragment.newInstance()
+            mainFragment.clickListener = this
+            mainFragment.holdClickListener = this
             val fragmentContainerViewId: Int = if (binding.mainFragment == null) {
                 R.id.container
             } else {
@@ -62,8 +65,13 @@ class MainActivity : AppCompatActivity(), MainFragment.MainFragmentInteractionLi
         builder.setView(listTitleEditText)
         builder.setPositiveButton(getString(R.string.create_list)) { dialog, _ ->
             dialog.dismiss()
-//            viewModel.saveList(NameList(listTitleEditText.text.toString()))
-//            showListDetail(NameList(listTitleEditText.text.toString()))
+            if (viewModel.findList(listTitleEditText.text.toString())){
+                Toast.makeText(this,"The note name has been taken", Toast.LENGTH_LONG).show()
+            }else {
+                val noteList = NameList(listTitleEditText.text.toString(), "")
+                viewModel.createList(noteList)
+                showListDetail(noteList)
+            }
         }
         builder.create().show()
     }
@@ -82,15 +90,75 @@ class MainActivity : AppCompatActivity(), MainFragment.MainFragmentInteractionLi
         }
     }
 
+    private fun showRemoveDialog(list: NameList) {
+        val dialogTitle = "You removing note ${list.name}!"
+        val positiveButtonTitle = "Yes"
+        val negativeButtonTitle = "No"
+
+        val builder = AlertDialog.Builder(this)
+
+        builder.setTitle(dialogTitle)
+
+        builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
+            dialog.dismiss()
+            viewModel.removeList(list)
+
+            viewModel = ViewModelProvider(this,
+                MainViewModelFactory(android.preference.PreferenceManager.getDefaultSharedPreferences(this))
+            )
+                .get(MainViewModel::class.java)
+            binding = MainActivityBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+
+            val mainFragment = MainFragment.newInstance()
+            mainFragment.clickListener = this
+            mainFragment.holdClickListener = this
+            val fragmentContainerViewId: Int = if (binding.mainFragment == null) {
+                R.id.container }
+            else {
+                R.id.main_fragment
+            }
+
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add(fragmentContainerViewId, mainFragment)
+            }
+
+
+            binding.addButton.setOnClickListener {
+                showCreateListName()
+            }
+
+        }
+        builder.setNegativeButton(negativeButtonTitle) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.create().show()
+    }
+
     companion object {
         const val INTENT_LIST_KEY = "list"
+        const val LIST_DETAIL_REQUEST_CODE = 123
     }
 
     override fun listItemTapped(list: NameList) {
         showListDetail(list)
     }
 
-    @SuppressLint("WrongViewCast")
+    override fun listItemHold(list: NameList) {
+        showRemoveDialog(list)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LIST_DETAIL_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                viewModel.updateList(data.getParcelableExtra(INTENT_LIST_KEY)!!)
+            }
+        }
+    }
+
     override fun onBackPressed() {
         val listNoteFragment = supportFragmentManager.findFragmentById(R.id.list_detail_fragment)
         if (listNoteFragment == null) {

@@ -2,10 +2,12 @@ package com.example.cn333as2
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +24,6 @@ class ListDetailActivity : AppCompatActivity() {
     private lateinit var binding: ListDetailActivityBinding
     private lateinit var viewModel: MainViewModel
 
-    @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,9 +38,16 @@ class ListDetailActivity : AppCompatActivity() {
 
         viewModel.list = intent.getParcelableExtra(MainActivity.INTENT_LIST_KEY)!!
         title = viewModel.list.name
+
         val sharedPreferences : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val editT: EditText = findViewById(R.id.edittext)
-
+        val contented = sharedPreferences.getString(title as String,"Not found")
+        if (contented != null) {
+            Log.d(ContentValues.TAG, contented)
+            editT.setText(contented)
+        }else{
+            Log.d(ContentValues.TAG, "BROKE")
+        }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -48,20 +56,15 @@ class ListDetailActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("WrongViewCast")
     override fun onBackPressed() {
-        val listFragment = supportFragmentManager.findFragmentById(R.id.list_detail_fragment)
-        if (listFragment == null) {
-            super.onBackPressed()
-        } else {
-            title = resources.getString(R.string.app_name)
-            val editT: EditText = findViewById(R.id.edittext)
-            viewModel.saveList(NameList(viewModel.list.name, editT.text.toString()))
-            editT.setText("")
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                remove(listFragment)
-            }
-        }
+        val editNoteText: EditText = findViewById(R.id.edittext)
+        viewModel.saveList(NameList(viewModel.list.name,editNoteText.text.toString()))
+        val bundle = Bundle()
+        bundle.putParcelable(MainActivity.INTENT_LIST_KEY,viewModel.list)
+        val intent = Intent()
+        intent.putExtras(bundle)
+        setResult(Activity.RESULT_OK, intent)
+        super.onBackPressed()
+
     }
 }
