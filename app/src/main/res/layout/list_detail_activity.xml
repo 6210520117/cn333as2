@@ -4,5 +4,33 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListDetailActivity" />
+    tools:context=".ListDetailActivity" >
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/detail_fragment_container"
+        android:name="com.example.cn333as2.ui.detail.ListDetailFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:inputType="textMultiLine|textCapSentences"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
 
