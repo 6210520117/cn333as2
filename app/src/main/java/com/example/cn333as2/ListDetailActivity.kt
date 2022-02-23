@@ -20,6 +20,11 @@ class ListDetailActivity : AppCompatActivity() {
         setContentView(R.layout.list_detail_activity)
         list = intent.getParcelableExtra(MainActivity.INTENT_LIST_KEY)!!
         title = list.name
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, ListDetailFragment.newInstance())
+                .commitNow()
+        }
     }
 
     public override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -28,9 +33,10 @@ class ListDetailActivity : AppCompatActivity() {
         var text = sharedPreferences.getString(list.name, "")
         textEdit.setText(text)
         super.onPostCreate(savedInstanceState)
+
     }
 
-    override fun onBackPressed() {
+  override fun onBackPressed() {
         sharedPreferences = getSharedPreferences("", MODE_PRIVATE)
         textEdit = findViewById(R.id.editText)
         var edited = textEdit.text.toString()

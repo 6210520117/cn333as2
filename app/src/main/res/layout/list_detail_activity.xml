@@ -7,14 +7,15 @@
     tools:context=".ListDetailActivity"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:inputType="textCapSentences|textMultiLine"
-        android:scrollbars="vertical"
-        android:text="activity"
-        android:textSize="16dp"/>
+<!--    <EditText-->
+<!--        android:id="@+id/editText"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:inputType="textCapSentences|textMultiLine"-->
+<!--        android:scrollbars="vertical"-->
+<!--        android:text="activity"-->
+<!--        android:textSize="16dp"/>-->
+
 </LinearLayout>
 
