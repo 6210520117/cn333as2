@@ -11,6 +11,5 @@
         android:layout_margin="10dp"
         android:inputType="textCapSentences|textMultiLine"
         android:scrollbars="vertical"
-        android:text="activity"
         android:textSize="16dp"/>
 </LinearLayout>

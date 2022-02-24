@@ -1,16 +1,12 @@
 package com.example.cn333as2
 
-import android.content.ContentValues.TAG
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import android.widget.EditText
 import com.example.cn333as2.models.NameList
-import java.lang.ClassCastException
 
-class ListDetailActivity : AppCompatActivity() {
+class ListDetailActivity() : AppCompatActivity() {
     lateinit var list : NameList
     lateinit var sharedPreferences: SharedPreferences
     lateinit var textEdit : EditText

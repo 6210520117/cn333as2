@@ -12,15 +12,16 @@ import com.example.cn333as2.R
 import com.example.cn333as2.databinding.MainFragmentBinding
 import com.example.cn333as2.models.NameList
 
-class MainFragment(val clickListener: MainFragmentInteractionListener) : Fragment(), ListSelectionRecyclerViewAdapter.ListSelectionRecyclerViewClickListener{
+class MainFragment() : Fragment(), ListSelectionRecyclerViewAdapter.ListSelectionRecyclerViewClickListener{
     private lateinit var binding:MainFragmentBinding
+    var clickListener: MainFragmentInteractionListener? = null
 
     interface MainFragmentInteractionListener {
         fun listItemTapped(list: NameList)
     }
 
     companion object {
-        fun newInstance(clickListener: MainFragmentInteractionListener) = MainFragment(clickListener)
+        fun newInstance() = MainFragment()
     }
 
     private lateinit var viewModel: MainViewModel
@@ -48,7 +49,7 @@ class MainFragment(val clickListener: MainFragmentInteractionListener) : Fragmen
     }
 
     override fun listItemClicked(list: NameList) {
-        clickListener.listItemTapped(list)
+        clickListener?.listItemTapped(list)
     }
 
 }
