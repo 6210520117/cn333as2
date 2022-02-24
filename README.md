@@ -15,4 +15,4 @@
 4.  ไม่สามารถบันถึกข้อความได้
 5.  ปรับ Theme
 
-[ลิ้งคลิป DEMO](https://youtu.be/lkRD9HPTU30).
+[ลิ้งคลิป DEMO](https://youtu.be/yXeDDe10GnQ).
